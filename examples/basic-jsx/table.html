@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>try</title>
+    <style type="text/css">
+        #continent{text-align:center;}
+    </style>
+</head>
+<body>
+<div id="continent"></div>
+<script src="../../build/react.js"></script>
+<script src="../../build/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+<script type="text/babel">
+    var Hello = React.createClass({
+        getInitialState: function () {
+            return {
+                opacity: 1.0
+            };
+        },
+
+        componentDidMount: function () {
+            this.timer = setInterval(function () {
+                var opacity = this.state.opacity;
+                opacity -= .05;
+                if (opacity < 0.1) {
+                    opacity = 1.0;
+                }
+                this.setState({
+                    opacity: opacity
+                });
+            }.bind(this), 100);
+        },
+
+        render: function () {
+            return (
+                    <div style={{opacity: this.state.opacity}}>
+                        <h1>{this.props.name}</h1>
+                    </div>
+            );
+        }
+    });
+    var TodoList = React.createClass({
+        render: function() {
+            var createItem = function(itemText) {
+                return <div><input value={itemText}></input></div>;
+            };
+            return <div>{this.props.items.map(createItem)}</div>;
+        }
+    });
+    var MyInput = React.createClass({
+        getInitialState: function() {
+            return {items: [], text: ''};
+        },
+        onChange: function(e) {
+            this.setState({text: e.target.value});
+        },
+        handleSubmit: function(e) {
+            e.preventDefault();
+            var nextItems = this.state.items.concat([this.state.text]);
+            var nextText = '';
+            this.setState({items: nextItems, text: nextText});
+        },
+        render: function() {
+            return (
+                    <div>
+                        <Hello  name="TODO"/>
+
+                        <form onSubmit={this.handleSubmit}>
+                            <input onChange={this.onChange} value={this.state.text} />
+
+                        </form>
+                        <TodoList items={this.state.items} />
+
+                    </div>
+            );
+        }
+    });
+
+    ReactDOM.render(<MyInput />, document.getElementById("continent"));
+
+</script>
+</body>
+</html>
